@@ -138,6 +138,11 @@ namespace OpenUtau.Core.Format {
 
         public static UProject Load(string filePath) {
             string text = File.ReadAllText(filePath, Encoding.UTF8);
+            return LoadFromText(filePath, text);
+        }
+
+        /// <summary>Loads the exact text an automation caller has validated, avoiding a second file read.</summary>
+        public static UProject LoadFromText(string filePath, string text) {
             UProject project = Yaml.DefaultDeserializer.Deserialize<UProject>(text);
             AddDefaultExpressions(project);
             project.FilePath = filePath;

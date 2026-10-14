@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia;
 using DynamicData.Binding;
 using OpenUtau.Core;
+using OpenUtau.Core.Automation;
 using OpenUtau.Core.Ustx;
 using OpenUtau.Core.Util;
 using ReactiveUI;
@@ -482,7 +483,24 @@ namespace OpenUtau.App.ViewModels {
         }
 
         public void OnNext(UCommand cmd, bool isUndo) {
-            if (cmd is NoteCommand noteCommand) {
+            if (cmd is AutomationBatchCommand batch) {
+                Parts.Clear();
+                Parts.AddRange(batch.Project.parts);
+                Tracks.Clear();
+                Tracks.AddRange(batch.Project.tracks);
+                SelectedParts.RemoveAll(part => !batch.Project.parts.Contains(part));
+                TempSelectedParts.RemoveWhere(part => !batch.Project.parts.Contains(part));
+                SelectedTracks.RemoveAll(track => !batch.Project.tracks.Contains(track));
+                if (PianoRollOpenPart != null && !batch.Project.parts.Contains(PianoRollOpenPart)) { PianoRollOpenPart = null; }
+                Notify();
+                MessageBus.Current.SendMessage(new TracksRefreshEvent());
+                MessageBus.Current.SendMessage(new TrackSelectionEvent(SelectedTracks.ToArray()));
+                MessageBus.Current.SendMessage(new PartsSelectionEvent(SelectedParts.ToArray(), TempSelectedParts.ToArray()));
+                foreach (var part in Parts) {
+                    MessageBus.Current.SendMessage(new PartRefreshEvent(part));
+                    MessageBus.Current.SendMessage(new PartRedrawEvent(part));
+                }
+            } else if (cmd is NoteCommand noteCommand) {
                 if (noteCommand is ResizeNoteCommand || noteCommand is AddNoteCommand || noteCommand is MoveNoteCommand) {
                     MessageBus.Current.SendMessage(new PartRefreshEvent(noteCommand.Part));
                 }

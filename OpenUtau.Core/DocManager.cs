@@ -72,10 +72,13 @@ namespace OpenUtau.Core {
             Project = project;
             return previous;
         }
+        internal void SetMainThreadForTest(Thread thread) { mainThread = thread; Util.ThreadGuard.SetUiThread(thread); }
         public Plugin[] Plugins { get; private set; }
         public PhonemizerFactory[] PhonemizerFactories { get; private set; }
         public UProject Project { get; private set; }
         public bool HasOpenUndoGroup => undoGroup != null;
+        /// <summary>Identity of the latest committed undo step, for guarded automation reverts.</summary>
+        public object? LatestUndoGroup => undoQueue.LastOrDefault();
         public List<UPart>? PartsClipboard { get; set; }
         public List<UNote>? NotesClipboard { get; set; }
         public CurveSelection? CurvesClipboard { get; set; }
@@ -196,6 +199,14 @@ namespace OpenUtau.Core {
             }
         }
 
+        /// <summary>Marks a successfully written, revision-guarded automation save.</summary>
+        public void MarkProjectSaved(string path) {
+            savedPoint = undoQueue.LastOrDefault();
+            Project.Saved = true;
+            Project.FilePath = path;
+            Recovered = false;
+        }
+
 
         private void CrashSave() {
             try {
@@ -274,7 +285,9 @@ namespace OpenUtau.Core {
                 PostOnUIThread(() => ExecuteCmd(cmd));
                 return;
             }
-            Util.ThreadGuard.AssertUi();
+            // A document's dispatcher owns its commands. Test hosts can own a separate
+            // document without replacing the live singleton's global UI-thread marker.
+            Debug.Assert(mainThread == Thread.CurrentThread, "DocManager: expected the document's owning editor thread.");
             if (cmd is UNotification) {
                 if (cmd is SaveProjectNotification saveProjectNotif) {
                     if (undoQueue.Count > 0) {
@@ -465,6 +478,14 @@ namespace OpenUtau.Core {
                 return;
             }
             FlushValidation();
+            // Validation can fail (for example while loading a singer). Do it before
+            // changing undo/redo history so the caller can still roll back the group.
+            if (undoGroup.DeferValidate) {
+                InvalidateGroup(undoGroup.Commands);
+                ValidateAndRefresh();
+            }
+            undoGroup.Merge();
+            ScheduleRealCurveRefresh(undoGroup.Commands);
             if (undoGroup.Commands.Count > 0) {
                 // The group is committed: bump the document revision. Regular
                 // groups already invalidated per command before their
@@ -476,19 +497,40 @@ namespace OpenUtau.Core {
             while (undoQueue.Count > Util.Preferences.Default.UndoLimit) {
                 undoQueue.RemoveFromFront();
             }
-            if (undoGroup.DeferValidate) {
-                // Deferred groups validated nothing per command: invalidate
-                // once, right before the single validate that follows.
-                InvalidateGroup(undoGroup.Commands);
-                ValidateAndRefresh();
-            }
             if (undoGroup.Commands.Count > 0) {
                 Log.Information("Undo group {Name}: {Commands}", undoGroup.NameKey, DescribeCommands(undoGroup.Commands));
             }
-            undoGroup.Merge();
-            ScheduleRealCurveRefresh(undoGroup.Commands);
             undoGroup = null;
-            ExecuteCmd(new PreRenderNotification());
+            try {
+                ExecuteCmd(new PreRenderNotification());
+            } catch (Exception exception) {
+                // The document and history are already committed. A derived render
+                // subscriber failure must not turn this successful edit into a retry.
+                Log.Error(exception, "Pre-render notification failed after undo commit.");
+            }
+        }
+
+        /// <summary>Abort a failed transaction without committing an empty undo step.</summary>
+        public void AbortUndoGroup() {
+            if (undoGroup == null) return;
+            try {
+                var commands = undoGroup.Commands.ToArray();
+                BumpRevision();
+                InvalidateGroup(commands);
+                for (int i = commands.Length - 1; i >= 0; i--) commands[i].Unexecute();
+                undoGroup.Commands.Clear();
+                try {
+                    ValidateAndRefresh();
+                } catch (Exception exception) {
+                    // Undo has restored the musical state. A singer/derived-data
+                    // validation error must still close the failed transaction.
+                    Log.Error(exception, "Validation failed after restoring an aborted transaction.");
+                }
+                foreach (var command in commands.Reverse()) Publish(command, true);
+            } finally {
+                undoGroup = null;
+                pendingValidate = null;
+            }
         }
 
         /// <summary>

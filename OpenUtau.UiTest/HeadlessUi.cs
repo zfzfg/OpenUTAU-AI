@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
@@ -33,6 +34,10 @@ namespace OpenUtau.UiTest {
     public static class HeadlessUi {
         // PerAssembly: the app attaches dev tools on init in Debug builds, which Avalonia allows only once.
         static readonly Lazy<HeadlessUnitTestSession> session = new Lazy<HeadlessUnitTestSession>(() => {
+            // UI smoke tests must not read or replace a user's assistant transcripts/preferences.
+            var testData = Path.Combine(Path.GetTempPath(), "OpenUtau-UiTest", Guid.NewGuid().ToString("N"));
+            Environment.SetEnvironmentVariable("OPENUTAU_ASSISTANT_DATA_DIR", Path.Combine(testData, "assistant"));
+            Environment.SetEnvironmentVariable("OPENUTAU_AUTOMATION_DIR", Path.Combine(testData, "automation"));
             Log.Logger = new LoggerConfiguration().WriteTo.Sink(Errors).CreateLogger();
             Avalonia.Logging.Logger.Sink = Errors;
             return HeadlessUnitTestSession.StartNew(typeof(TestAppBuilder), AvaloniaTestIsolationLevel.PerAssembly);
@@ -44,6 +49,8 @@ namespace OpenUtau.UiTest {
         public static void Run(Action action) {
             session.Value.Dispatch(action, CancellationToken.None).GetAwaiter().GetResult();
         }
+
+        public static Task RunAsync(Func<Task> action) => session.Value.Dispatch(async () => { await action(); return true; }, CancellationToken.None);
 
         /// <summary>Processes pending UI work and renders a frame.</summary>
         public static void Flush() {

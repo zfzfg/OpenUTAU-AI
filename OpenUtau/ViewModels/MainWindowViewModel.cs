@@ -59,6 +59,16 @@ namespace OpenUtau.App.ViewModels {
     }
 
     public partial class MainWindowViewModel : ViewModelBase, ICmdSubscriber {
+        public AssistantSidebarViewModel Assistant { get; } = new AssistantSidebarViewModel();
+        bool assistantEffectiveVisible;
+        public bool AssistantVisible {
+            get => Assistant.Preferences.Visible;
+            set { Assistant.Preferences.Visible = value; this.RaisePropertyChanged(); }
+        }
+        public bool AssistantEffectiveVisible {
+            get => assistantEffectiveVisible;
+            set => this.RaiseAndSetIfChanged(ref assistantEffectiveVisible, value);
+        }
         public string Title => !ProjectSaved
             ? $"{AppVersion}"
             : $"{(DocManager.Inst.ChangesSaved ? "" : "*")}{AppVersion} [{DocManager.Inst.Project.FilePath}]";

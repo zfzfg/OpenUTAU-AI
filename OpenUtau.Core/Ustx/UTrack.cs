@@ -144,8 +144,7 @@ namespace OpenUtau.Core.Ustx {
             if (RendererSettings.Renderer == null) {
                 return list;
             }
-            var exps = project.expressions.Keys.ToList();
-            exps.Union(TrackExpressions.Select(exp => exp.abbr));
+            var exps = project.expressions.Keys.Union(TrackExpressions.Select(exp => exp.abbr)).ToList();
             foreach (var abbr in exps) {
                 if (TryGetExpDescriptor(project, abbr, out var descriptor) && RendererSettings.Renderer.SupportsExpression(descriptor)) {
                     list.Add(descriptor);

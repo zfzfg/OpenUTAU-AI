@@ -1,0 +1,26 @@
+{
+  "name": "openutau-ai",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=24 <27" },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "contracts": "node scripts/generate-contracts.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "package": "node scripts/build-package.mjs",
+    "check:contracts": "node scripts/generate-contracts.mjs --check"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.3.1",
+    "ajv": "8.20.0"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.3.1",
+    "@types/node": "26.6.5",
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2"
+  }
+}

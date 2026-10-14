@@ -1,0 +1,937 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openutau.org/automation/v1/edit.schema.json",
+  "type": "object",
+  "properties": {
+    "instanceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "projectSessionId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "expectedEditRevision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "operationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 1024
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "set_project_info"
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 4096
+              },
+              "comment": {
+                "type": "string",
+                "maxLength": 65536
+              },
+              "key": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 11
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "set_tempo_map"
+              },
+              "tempos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "positionTicks": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "bpm": {
+                      "type": "number",
+                      "exclusiveMinimum": 0,
+                      "maximum": 1000
+                    }
+                  },
+                  "required": [
+                    "positionTicks",
+                    "bpm"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "tempos"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "set_time_signature_map"
+              },
+              "timeSignatures": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "barPosition": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "numerator": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 32
+                    },
+                    "denominator": {
+                      "type": "integer",
+                      "enum": [
+                        1,
+                        2,
+                        4,
+                        8,
+                        16,
+                        32
+                      ]
+                    }
+                  },
+                  "required": [
+                    "barPosition",
+                    "numerator",
+                    "denominator"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "timeSignatures"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "add_track"
+              },
+              "clientRef": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 4096
+              },
+              "singerId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "phonemizerId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "volumeDb": {
+                "type": "number"
+              },
+              "pan": {
+                "type": "number",
+                "minimum": -100,
+                "maximum": 100
+              },
+              "mute": {
+                "type": "boolean"
+              },
+              "solo": {
+                "type": "boolean"
+              },
+              "color": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "update_track"
+              },
+              "trackId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 4096
+              },
+              "singerId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "phonemizerId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "volumeDb": {
+                "type": "number"
+              },
+              "pan": {
+                "type": "number",
+                "minimum": -100,
+                "maximum": 100
+              },
+              "mute": {
+                "type": "boolean"
+              },
+              "solo": {
+                "type": "boolean"
+              },
+              "color": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "trackId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "remove_track"
+              },
+              "trackId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            },
+            "required": [
+              "type",
+              "trackId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "add_part"
+              },
+              "clientRef": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "trackId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 4096
+              },
+              "positionTicks": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              },
+              "durationTicks": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "voice"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "trackId",
+              "positionTicks",
+              "durationTicks"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "update_part"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "trackId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "name": {
+                "type": "string",
+                "maxLength": 4096
+              },
+              "positionTicks": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              },
+              "durationTicks": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2147483647
+              }
+            },
+            "required": [
+              "type",
+              "partId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "remove_part"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            },
+            "required": [
+              "type",
+              "partId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "add_notes"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "notes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "clientRef": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "positionTicks": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "durationTicks": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "tone": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 127
+                    },
+                    "lyric": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "tuningCents": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "positionTicks",
+                    "durationTicks",
+                    "tone"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId",
+              "notes"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "update_notes"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "noteId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "positionTicks": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "durationTicks": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "tone": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 127
+                    },
+                    "lyric": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "tuningCents": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "noteId"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId",
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "remove_notes"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "noteIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId",
+              "noteIds"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "set_lyrics"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "noteId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "lyric": {
+                      "type": "string",
+                      "maxLength": 4096
+                    }
+                  },
+                  "required": [
+                    "noteId",
+                    "lyric"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 65536
+              },
+              "noteIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "set_phonetic_hints"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "noteId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "lyric": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "phoneticHint": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "alphabet": {
+                      "type": "string",
+                      "enum": [
+                        "phonemizer"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "noteId",
+                    "phoneticHint"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId",
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "set_phoneme_overrides"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "phonemeGeneration": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "noteId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemeIndex": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "alias": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "offsetTicks": {
+                      "type": "integer"
+                    },
+                    "preutterDeltaMs": {
+                      "type": "number"
+                    },
+                    "overlapDeltaMs": {
+                      "type": "number"
+                    },
+                    "attackTimeDeltaMs": {
+                      "type": "number"
+                    },
+                    "releaseTimeDeltaMs": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "noteId",
+                    "phonemeIndex"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId",
+              "phonemeGeneration",
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "clear_phoneme_overrides"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "phonemeGeneration": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              },
+              "noteIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId",
+              "phonemeGeneration",
+              "noteIds"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "set_pitch"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "noteId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "points": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "xMs": {
+                            "type": "number"
+                          },
+                          "yCents": {
+                            "type": "number"
+                          },
+                          "shape": {
+                            "type": "string",
+                            "enum": [
+                              "io",
+                              "i",
+                              "o",
+                              "l"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "xMs",
+                          "yCents"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    },
+                    "snapFirst": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "noteId",
+                    "points"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId",
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "set_vibrato"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "noteId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "lengthPercent": {
+                      "type": "number"
+                    },
+                    "periodMs": {
+                      "type": "number"
+                    },
+                    "depthCents": {
+                      "type": "number"
+                    },
+                    "fadeInPercent": {
+                      "type": "number"
+                    },
+                    "fadeOutPercent": {
+                      "type": "number"
+                    },
+                    "shiftPercent": {
+                      "type": "number"
+                    },
+                    "driftPercent": {
+                      "type": "number"
+                    },
+                    "volumeLinkPercent": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "noteId"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId",
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "set_expressions"
+              },
+              "partId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "noteId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "abbr": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemeIndex": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "value": {
+                      "type": "number"
+                    },
+                    "points": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "positionTicks": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "value": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "positionTicks",
+                          "value"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "abbr"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "type",
+              "partId",
+              "items"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "maxItems": 1000,
+      "minItems": 1
+    }
+  },
+  "required": [
+    "projectSessionId",
+    "expectedEditRevision",
+    "operationId",
+    "operations"
+  ],
+  "additionalProperties": false
+}

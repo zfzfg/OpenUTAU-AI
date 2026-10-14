@@ -10,6 +10,7 @@ namespace OpenUtau.Core.Util {
     /// </summary>
     public static class ThreadGuard {
         static Thread uiThread;
+        internal static Thread UiThreadForTest => uiThread;
 
         /// <summary>Registers the UI thread. Call once at startup.</summary>
         public static void SetUiThread(Thread thread) {

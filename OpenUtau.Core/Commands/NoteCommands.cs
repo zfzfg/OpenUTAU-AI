@@ -34,7 +34,7 @@ namespace OpenUtau.Core {
         }
         public AddNoteCommand(UVoicePart part, List<UNote> notes) : base(part, notes) {
             OldPartDuration = part.Duration;
-            var note = notes.LastOrDefault();
+            var note = notes.OrderBy(n => n.End).LastOrDefault();
             if (note != null) {
                 int minDurTick = part.GetMinDurTickForNoteEdit(DocManager.Inst.Project, note.End);
                 if (part.Duration < minDurTick) {
@@ -100,7 +100,7 @@ namespace OpenUtau.Core {
             DeltaPos = deltaPos;
             DeltaNoteNum = deltaNoteNum;
             OldPartDuration = part.Duration;
-            var note = notes.LastOrDefault();
+            var note = notes.OrderBy(n => n.End).LastOrDefault();
             if (note != null) {
                 int minDurTick = part.GetMinDurTickForNoteEdit(DocManager.Inst.Project, note.End + deltaPos);
                 if (part.Duration < minDurTick) {
@@ -150,7 +150,7 @@ namespace OpenUtau.Core {
         public ResizeNoteCommand(UVoicePart part, List<UNote> notes, int deltaDur) : base(part, notes) {
             DeltaDur = deltaDur;
             OldPartDuration = part.Duration;
-            var note = notes.LastOrDefault();
+            var note = notes.OrderBy(n => n.End).LastOrDefault();
             if (note != null) {
                 int minDurTick = part.GetMinDurTickForNoteEdit(DocManager.Inst.Project, note.End + deltaDur);
                 if (part.Duration < minDurTick) {

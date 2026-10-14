@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openutau.org/automation/v1/results.schema.json",
+  "type": "object",
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "APP_NOT_RUNNING",
+            "APP_UNAVAILABLE",
+            "AUTOMATION_DISABLED",
+            "APP_INITIALIZING",
+            "INSTANCE_AMBIGUOUS",
+            "UNAUTHORIZED",
+            "PROTOCOL_MISMATCH",
+            "PROJECT_CHANGED",
+            "SNAPSHOT_EXPIRED",
+            "ENTITY_NOT_FOUND",
+            "REVISION_CONFLICT",
+            "PHONEME_GENERATION_CONFLICT",
+            "EDITOR_BUSY",
+            "INVALID_ARGUMENT",
+            "LIMIT_EXCEEDED",
+            "UNSUPPORTED_CAPABILITY",
+            "MISSING_SINGER",
+            "MISSING_ALIAS",
+            "PHONEMIZER_FAILED",
+            "RENDER_FAILED",
+            "FILE_ACCESS_DENIED",
+            "IDEMPOTENCY_CONFLICT",
+            "CANCELLED",
+            "OPERATION_STATE_UNKNOWN"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "details": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": true
+        },
+        "hint": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "projectSessionId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "editRevision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "operationId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "status": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    }
+  },
+  "required": [
+    "ok"
+  ],
+  "additionalProperties": true
+}

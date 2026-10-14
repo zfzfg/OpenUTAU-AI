@@ -14,6 +14,7 @@ namespace OpenUtau.App.Controls {
         private bool noteMode = true;
 
         public SearchBar() {
+            DataContext = null;
             InitializeComponent();
             IsVisible = false;
         }

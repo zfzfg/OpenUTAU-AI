@@ -13,6 +13,7 @@ using DynamicData;
 using DynamicData.Binding;
 using OpenUtau.App.Views;
 using OpenUtau.Core;
+using OpenUtau.Core.Automation;
 using OpenUtau.Core.Ustx;
 using OpenUtau.Core.Util;
 using OpenUtau.ViewModels;
@@ -1181,7 +1182,21 @@ namespace OpenUtau.App.ViewModels {
         }
 
         public void OnNext(UCommand cmd, bool isUndo) {
-            if (cmd is UNotification notif) {
+            if (cmd is AutomationBatchCommand batch) {
+                if (Part != null && !batch.Project.parts.Contains(Part)) {
+                    UnloadPart();
+                } else {
+                    CleanupSelectedNotes();
+                    OnPartModified();
+                    RebuildPlaybackNoteIndex();
+                    LoadWindowTitle(Part, Project);
+                    LoadTrackColor(Part, Project);
+                    LoadPortrait(Part, Project);
+                    UpdateIsDiffSinger();
+                    PrimaryKeyNotSupported = !IsExpSupported(PrimaryKey);
+                }
+                MessageBus.Current.SendMessage(new NotesRefreshEvent());
+            } else if (cmd is UNotification notif) {
                 if (cmd is LoadPartNotification loadPart) {
                     LoadPart(loadPart.part, loadPart.project);
                     double tickOffset = loadPart.tick - loadPart.part.position - Bounds.Width / TickWidth / 2;

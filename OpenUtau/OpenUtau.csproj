@@ -85,6 +85,11 @@
     <ProjectReference Include="..\OpenUtau.Core\OpenUtau.Core.csproj" />
     <ProjectReference Include="..\OpenUtau.Plugin.Builtin\OpenUtau.Plugin.Builtin.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- The self-contained publisher includes the ASP.NET runtime used by Kestrel. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <None Update="AI\**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
   <ItemGroup Condition="'$(Configuration)'=='DEBUG'">
     <None Include="..\runtimes\**" CopyToOutputDirectory="PreserveNewest" LinkBase="runtimes\" />
   </ItemGroup>

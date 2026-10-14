@@ -1,0 +1,5329 @@
+{
+  "apiVersion": "1",
+  "tools": [
+    {
+      "name": "openutau_list_instances",
+      "description": "List reachable OpenUtau processes; never choose an ambiguous instance implicitly.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "List reachable OpenUtau processes; never choose an ambiguous instance implicitly.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_get_project",
+      "description": "Read project session, edit revision, tick resolution, tempo, tracks and parts. Notes are paginated.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Read project session, edit revision, tick resolution, tempo, tracks and parts. Notes are paginated.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_get_selection",
+      "description": "Read current track, part and note selection, including detached piano roll.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Read current track, part and note selection, including detached piano roll.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_get_capabilities",
+      "description": "Read operation, renderer, expression and access limits before planning edits.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Read operation, renderer, expression and access limits before planning edits.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_list_singers",
+      "description": "List installed usable singers without disclosing their private filesystem paths.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "query": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "List installed usable singers without disclosing their private filesystem paths.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_list_phonemizers",
+      "description": "List available phonemizers; unknown language or phonetic capabilities remain unknown.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "List available phonemizers; unknown language or phonetic capabilities remain unknown.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_get_notes",
+      "description": "Read notes from a stable snapshot; note positions are relative to the part.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "partId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "fromTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "toTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "include": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "pitch",
+                "vibrato",
+                "expressions",
+                "overrides"
+              ]
+            },
+            "maxItems": 1000
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          }
+        },
+        "required": [
+          "partId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Read notes from a stable snapshot; note positions are relative to the part.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_get_phonemes",
+      "description": "Read aliases, timing and exact generation; stale phonemes are not a valid edit basis.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "partId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "noteIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "maxItems": 1000
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          }
+        },
+        "required": [
+          "partId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Read aliases, timing and exact generation; stale phonemes are not a valid edit basis.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_get_diagnostics",
+      "description": "Read missing aliases, durations, singer and derived processing errors.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "partId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Read missing aliases, durations, singer and derived processing errors.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_preview_edit",
+      "description": "Validate an edit and return a musical diff without changing revision or undo.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "runId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_project_info"
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "comment": {
+                      "type": "string",
+                      "maxLength": 65536
+                    },
+                    "key": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 11
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_tempo_map"
+                    },
+                    "tempos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "positionTicks": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "bpm": {
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 1000
+                          }
+                        },
+                        "required": [
+                          "positionTicks",
+                          "bpm"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "tempos"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_time_signature_map"
+                    },
+                    "timeSignatures": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "barPosition": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "numerator": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 32
+                          },
+                          "denominator": {
+                            "type": "integer",
+                            "enum": [
+                              1,
+                              2,
+                              4,
+                              8,
+                              16,
+                              32
+                            ]
+                          }
+                        },
+                        "required": [
+                          "barPosition",
+                          "numerator",
+                          "denominator"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "timeSignatures"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "add_track"
+                    },
+                    "clientRef": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "singerId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemizerId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "volumeDb": {
+                      "type": "number"
+                    },
+                    "pan": {
+                      "type": "number",
+                      "minimum": -100,
+                      "maximum": 100
+                    },
+                    "mute": {
+                      "type": "boolean"
+                    },
+                    "solo": {
+                      "type": "boolean"
+                    },
+                    "color": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "update_track"
+                    },
+                    "trackId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "singerId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemizerId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "volumeDb": {
+                      "type": "number"
+                    },
+                    "pan": {
+                      "type": "number",
+                      "minimum": -100,
+                      "maximum": 100
+                    },
+                    "mute": {
+                      "type": "boolean"
+                    },
+                    "solo": {
+                      "type": "boolean"
+                    },
+                    "color": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "trackId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "remove_track"
+                    },
+                    "trackId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "trackId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "add_part"
+                    },
+                    "clientRef": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "trackId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "positionTicks": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "durationTicks": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "voice"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "trackId",
+                    "positionTicks",
+                    "durationTicks"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "update_part"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "trackId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "positionTicks": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "durationTicks": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "remove_part"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "add_notes"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "notes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "clientRef": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "positionTicks": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "durationTicks": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "tone": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 127
+                          },
+                          "lyric": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "tuningCents": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "positionTicks",
+                          "durationTicks",
+                          "tone"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "notes"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "update_notes"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "positionTicks": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "durationTicks": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "tone": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 127
+                          },
+                          "lyric": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "tuningCents": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "noteId"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "remove_notes"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "noteIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "noteIds"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_lyrics"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "lyric": {
+                            "type": "string",
+                            "maxLength": 4096
+                          }
+                        },
+                        "required": [
+                          "noteId",
+                          "lyric"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 65536
+                    },
+                    "noteIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_phonetic_hints"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "lyric": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "phoneticHint": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "alphabet": {
+                            "type": "string",
+                            "enum": [
+                              "phonemizer"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "noteId",
+                          "phoneticHint"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_phoneme_overrides"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemeGeneration": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "phonemeIndex": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "alias": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "offsetTicks": {
+                            "type": "integer"
+                          },
+                          "preutterDeltaMs": {
+                            "type": "number"
+                          },
+                          "overlapDeltaMs": {
+                            "type": "number"
+                          },
+                          "attackTimeDeltaMs": {
+                            "type": "number"
+                          },
+                          "releaseTimeDeltaMs": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "noteId",
+                          "phonemeIndex"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "phonemeGeneration",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "clear_phoneme_overrides"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemeGeneration": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "noteIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "phonemeGeneration",
+                    "noteIds"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_pitch"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "points": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "xMs": {
+                                  "type": "number"
+                                },
+                                "yCents": {
+                                  "type": "number"
+                                },
+                                "shape": {
+                                  "type": "string",
+                                  "enum": [
+                                    "io",
+                                    "i",
+                                    "o",
+                                    "l"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "xMs",
+                                "yCents"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "maxItems": 1000
+                          },
+                          "snapFirst": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "noteId",
+                          "points"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_vibrato"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "lengthPercent": {
+                            "type": "number"
+                          },
+                          "periodMs": {
+                            "type": "number"
+                          },
+                          "depthCents": {
+                            "type": "number"
+                          },
+                          "fadeInPercent": {
+                            "type": "number"
+                          },
+                          "fadeOutPercent": {
+                            "type": "number"
+                          },
+                          "shiftPercent": {
+                            "type": "number"
+                          },
+                          "driftPercent": {
+                            "type": "number"
+                          },
+                          "volumeLinkPercent": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "noteId"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_expressions"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "abbr": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "phonemeIndex": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "value": {
+                            "type": "number"
+                          },
+                          "points": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "positionTicks": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 2147483647
+                                },
+                                "value": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "positionTicks",
+                                "value"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "maxItems": 1000
+                          }
+                        },
+                        "required": [
+                          "abbr"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "maxItems": 1000,
+            "minItems": 1
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId",
+          "operations"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Validate an edit and return a musical diff without changing revision or undo.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_apply_edit_batch",
+      "description": "Commit one undoable transaction guarded by project, revision and operation ID. Preview grants return a proposal.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "runId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "operations": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_project_info"
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "comment": {
+                      "type": "string",
+                      "maxLength": 65536
+                    },
+                    "key": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 11
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_tempo_map"
+                    },
+                    "tempos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "positionTicks": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "bpm": {
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 1000
+                          }
+                        },
+                        "required": [
+                          "positionTicks",
+                          "bpm"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "tempos"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_time_signature_map"
+                    },
+                    "timeSignatures": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "barPosition": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "numerator": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 32
+                          },
+                          "denominator": {
+                            "type": "integer",
+                            "enum": [
+                              1,
+                              2,
+                              4,
+                              8,
+                              16,
+                              32
+                            ]
+                          }
+                        },
+                        "required": [
+                          "barPosition",
+                          "numerator",
+                          "denominator"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "timeSignatures"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "add_track"
+                    },
+                    "clientRef": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "singerId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemizerId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "volumeDb": {
+                      "type": "number"
+                    },
+                    "pan": {
+                      "type": "number",
+                      "minimum": -100,
+                      "maximum": 100
+                    },
+                    "mute": {
+                      "type": "boolean"
+                    },
+                    "solo": {
+                      "type": "boolean"
+                    },
+                    "color": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "update_track"
+                    },
+                    "trackId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "singerId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemizerId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "volumeDb": {
+                      "type": "number"
+                    },
+                    "pan": {
+                      "type": "number",
+                      "minimum": -100,
+                      "maximum": 100
+                    },
+                    "mute": {
+                      "type": "boolean"
+                    },
+                    "solo": {
+                      "type": "boolean"
+                    },
+                    "color": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "trackId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "remove_track"
+                    },
+                    "trackId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "trackId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "add_part"
+                    },
+                    "clientRef": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "trackId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "positionTicks": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "durationTicks": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "voice"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "trackId",
+                    "positionTicks",
+                    "durationTicks"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "update_part"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "trackId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    "positionTicks": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "durationTicks": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "remove_part"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "add_notes"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "notes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "clientRef": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "positionTicks": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "durationTicks": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "tone": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 127
+                          },
+                          "lyric": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "tuningCents": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "positionTicks",
+                          "durationTicks",
+                          "tone"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "notes"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "update_notes"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "positionTicks": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "durationTicks": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                          },
+                          "tone": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 127
+                          },
+                          "lyric": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "tuningCents": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "noteId"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "remove_notes"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "noteIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "noteIds"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_lyrics"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "lyric": {
+                            "type": "string",
+                            "maxLength": 4096
+                          }
+                        },
+                        "required": [
+                          "noteId",
+                          "lyric"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 65536
+                    },
+                    "noteIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_phonetic_hints"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "lyric": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "phoneticHint": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "alphabet": {
+                            "type": "string",
+                            "enum": [
+                              "phonemizer"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "noteId",
+                          "phoneticHint"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_phoneme_overrides"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemeGeneration": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "phonemeIndex": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "alias": {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          "offsetTicks": {
+                            "type": "integer"
+                          },
+                          "preutterDeltaMs": {
+                            "type": "number"
+                          },
+                          "overlapDeltaMs": {
+                            "type": "number"
+                          },
+                          "attackTimeDeltaMs": {
+                            "type": "number"
+                          },
+                          "releaseTimeDeltaMs": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "noteId",
+                          "phonemeIndex"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "phonemeGeneration",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "clear_phoneme_overrides"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "phonemeGeneration": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "noteIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "phonemeGeneration",
+                    "noteIds"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_pitch"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "points": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "xMs": {
+                                  "type": "number"
+                                },
+                                "yCents": {
+                                  "type": "number"
+                                },
+                                "shape": {
+                                  "type": "string",
+                                  "enum": [
+                                    "io",
+                                    "i",
+                                    "o",
+                                    "l"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "xMs",
+                                "yCents"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "maxItems": 1000
+                          },
+                          "snapFirst": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "noteId",
+                          "points"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_vibrato"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "lengthPercent": {
+                            "type": "number"
+                          },
+                          "periodMs": {
+                            "type": "number"
+                          },
+                          "depthCents": {
+                            "type": "number"
+                          },
+                          "fadeInPercent": {
+                            "type": "number"
+                          },
+                          "fadeOutPercent": {
+                            "type": "number"
+                          },
+                          "shiftPercent": {
+                            "type": "number"
+                          },
+                          "driftPercent": {
+                            "type": "number"
+                          },
+                          "volumeLinkPercent": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "noteId"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "const": "set_expressions"
+                    },
+                    "partId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "noteId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "abbr": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 256
+                          },
+                          "phonemeIndex": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 2147483647
+                          },
+                          "value": {
+                            "type": "number"
+                          },
+                          "points": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "positionTicks": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 2147483647
+                                },
+                                "value": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "positionTicks",
+                                "value"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "maxItems": 1000
+                          }
+                        },
+                        "required": [
+                          "abbr"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "maxItems": 1000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "partId",
+                    "items"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "maxItems": 1000,
+            "minItems": 1
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId",
+          "operations"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Commit one undoable transaction guarded by project, revision and operation ID. Preview grants return a proposal.",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_register_input_file",
+      "description": "Register an existing absolute path inside a released workspace; receive a session-bound fileHandle.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "project",
+              "midi",
+              "audio"
+            ]
+          }
+        },
+        "required": [
+          "path",
+          "purpose"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Register an existing absolute path inside a released workspace; receive a session-bound fileHandle.",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_resolve_output_target",
+      "description": "Validate an absolute output path inside a released root; overwrite must be explicit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "project",
+              "audio"
+            ]
+          },
+          "overwrite": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "path",
+          "purpose"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Validate an absolute output path inside a released root; overwrite must be explicit.",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_new_project",
+      "description": "Create a new project using native Save/Cancel lifecycle; invalidate previous project identities.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 4096
+          },
+          "discardChanges": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Create a new project using native Save/Cancel lifecycle; invalidate previous project identities.",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_open_project",
+      "description": "Open a registered project file using native Save/Cancel lifecycle.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "fileHandle": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "discardChanges": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId",
+          "fileHandle"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Open a registered project file using native Save/Cancel lifecycle.",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_import_midi",
+      "description": "Import a registered MIDI file through undoable editor commands.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "fileHandle": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "preview": {
+            "type": "boolean"
+          },
+          "importTempo": {
+            "type": "boolean"
+          },
+          "trackId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "positionTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId",
+          "fileHandle"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Import a registered MIDI file through undoable editor commands.",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_import_audio",
+      "description": "Import a registered audio file as an undoable wave part.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "fileHandle": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "trackId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "positionTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "preview": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId",
+          "fileHandle"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Import a registered audio file as an undoable wave part.",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_wait_for_phonemes",
+      "description": "Wait boundedly for the exact edit generation; pending and stale are explicit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "partId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "timeoutMs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 30000
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "partId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Wait boundedly for the exact edit generation; pending and stale are explicit.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_start_render",
+      "description": "Start a preview, stems or mixdown job at an explicit project revision.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "preview",
+              "stems",
+              "mixdown"
+            ]
+          },
+          "partId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "trackIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "maxItems": 1000
+          },
+          "fromTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "toTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId",
+          "kind"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Start a preview, stems or mixdown job at an explicit project revision.",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_get_job",
+      "description": "Read job progress, typed failures and verified output artifacts.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "jobId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "jobId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Read job progress, typed failures and verified output artifacts.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_cancel_job",
+      "description": "Request job cancellation; cancellation is confirmed separately from the request.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "jobId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "jobId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Request job cancellation; cancellation is confirmed separately from the request.",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_get_operation",
+      "description": "Resolve an operation after timeout; never blindly repeat a possibly committed edit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "operationId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Resolve an operation after timeout; never blindly repeat a possibly committed edit.",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_revert_operation",
+      "description": "Revert a compatible most recent owned transaction without undoing intervening user work.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "targetOperationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId",
+          "targetOperationId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Revert a compatible most recent owned transaction without undoing intervening user work.",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_play_range",
+      "description": "Play an explicit project or preview range through the shared audio coordinator.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "fromTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "toTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "artifactId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "projectSessionId"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Play an explicit project or preview range through the shared audio coordinator.",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_stop_playback",
+      "description": "Stop project and preview audio.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Stop project and preview audio.",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_save_project",
+      "description": "Save the guarded project to a validated outputHandle.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "outputHandle": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "overwrite": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId",
+          "outputHandle"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Save the guarded project to a validated outputHandle.",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "openutau_export_audio",
+      "description": "Export preview, stems or mixdown as a job to a validated outputHandle.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "instanceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "expectedEditRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "preview",
+              "stems",
+              "mixdown"
+            ]
+          },
+          "outputHandle": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "overwrite": {
+            "type": "boolean",
+            "default": false
+          },
+          "partId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "trackIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "maxItems": 1000
+          },
+          "fromTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "toTicks": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          }
+        },
+        "required": [
+          "projectSessionId",
+          "expectedEditRevision",
+          "operationId",
+          "kind",
+          "outputHandle"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://openutau.org/automation/v1/results.schema.json",
+        "type": "object",
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "APP_NOT_RUNNING",
+                  "APP_UNAVAILABLE",
+                  "AUTOMATION_DISABLED",
+                  "APP_INITIALIZING",
+                  "INSTANCE_AMBIGUOUS",
+                  "UNAUTHORIZED",
+                  "PROTOCOL_MISMATCH",
+                  "PROJECT_CHANGED",
+                  "SNAPSHOT_EXPIRED",
+                  "ENTITY_NOT_FOUND",
+                  "REVISION_CONFLICT",
+                  "PHONEME_GENERATION_CONFLICT",
+                  "EDITOR_BUSY",
+                  "INVALID_ARGUMENT",
+                  "LIMIT_EXCEEDED",
+                  "UNSUPPORTED_CAPABILITY",
+                  "MISSING_SINGER",
+                  "MISSING_ALIAS",
+                  "PHONEMIZER_FAILED",
+                  "RENDER_FAILED",
+                  "FILE_ACCESS_DENIED",
+                  "IDEMPOTENCY_CONFLICT",
+                  "CANCELLED",
+                  "OPERATION_STATE_UNKNOWN"
+                ]
+              },
+              "message": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "details": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "additionalProperties": false
+          },
+          "projectSessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "editRevision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "additionalProperties": true
+      },
+      "annotations": {
+        "title": "Export preview, stems or mixdown as a job to a validated outputHandle.",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

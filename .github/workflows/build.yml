@@ -132,7 +132,7 @@ jobs:
             10.0.x
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '24.19.0'
       - uses: repolevedavaj/install-nsis@v1
         with:
           nsis-version: '3.11'
@@ -143,6 +143,18 @@ jobs:
           csproj-files: "OpenUtau/*.csproj"
 
       # Test
+      - name: Build and test AI host
+        working-directory: tools/openutau-ai
+        run: |
+          npm ci
+          npm run check:contracts
+          npm run typecheck
+          npm test
+
+      - name: Bundle pinned AI runtime
+        working-directory: tools/openutau-ai
+        run: npm run package -- --rid ${{ matrix.arch.rid }} --out ../../OpenUtau/AI
+
       - name: Test
         run: dotnet run --project OpenUtau.Test/OpenUtau.Test.csproj
 

@@ -40,6 +40,10 @@ Want to contribute plugins to help other users? Check out our API documentation:
 
 ## Main features
 
+This fork also includes a native AI assistant and an independent standard MCP server.
+Both use live, undoable editor commands. See the [AI setup and verification guide](docs/ai/README.md)
+for provider setup, external client configuration, builds and acceptance limits.
+
 Navigate the interface naturally and fluently using the mouse and scroll wheel. Keyboard shortcuts are also available.
 
 ![Editor](Misc/GIFs/editor.gif)

@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openutau.org/automation/v1/wire.schema.json",
+  "$defs": {
+    "AutomationRequest": {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "clientId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "operation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "arguments": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "apiVersion",
+        "requestId",
+        "clientId",
+        "operation",
+        "arguments"
+      ],
+      "additionalProperties": false
+    },
+    "AutomationError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "APP_NOT_RUNNING",
+            "APP_UNAVAILABLE",
+            "AUTOMATION_DISABLED",
+            "APP_INITIALIZING",
+            "INSTANCE_AMBIGUOUS",
+            "UNAUTHORIZED",
+            "PROTOCOL_MISMATCH",
+            "PROJECT_CHANGED",
+            "SNAPSHOT_EXPIRED",
+            "ENTITY_NOT_FOUND",
+            "REVISION_CONFLICT",
+            "PHONEME_GENERATION_CONFLICT",
+            "EDITOR_BUSY",
+            "INVALID_ARGUMENT",
+            "LIMIT_EXCEEDED",
+            "UNSUPPORTED_CAPABILITY",
+            "MISSING_SINGER",
+            "MISSING_ALIAS",
+            "PHONEMIZER_FAILED",
+            "RENDER_FAILED",
+            "FILE_ACCESS_DENIED",
+            "IDEMPOTENCY_CONFLICT",
+            "CANCELLED",
+            "OPERATION_STATE_UNKNOWN"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "details": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": true
+        },
+        "hint": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "AutomationResult": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "error": {
+          "$ref": "#/$defs/AutomationError"
+        },
+        "projectSessionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "editRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2147483647
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "ok"
+      ],
+      "additionalProperties": true
+    },
+    "InstanceDescriptor": {
+      "type": "object",
+      "properties": {
+        "instanceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "pid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "startedAt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "apiVersion": {
+          "const": "1"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "appVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "instanceId",
+        "pid",
+        "startedAt",
+        "apiVersion",
+        "url",
+        "token",
+        "appVersion"
+      ],
+      "additionalProperties": false
+    },
+    "AccessGrant": {
+      "type": "object",
+      "properties": {
+        "credential": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "instanceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "projectSessionId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "clientId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "grantId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "expiresAt": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "processGeneration": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "read_only",
+            "preview",
+            "apply"
+          ]
+        }
+      },
+      "required": [
+        "credential",
+        "url",
+        "instanceId",
+        "projectSessionId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/AutomationRequest"
+    },
+    {
+      "$ref": "#/$defs/AutomationResult"
+    },
+    {
+      "$ref": "#/$defs/InstanceDescriptor"
+    },
+    {
+      "$ref": "#/$defs/AccessGrant"
+    }
+  ]
+}

@@ -16,6 +16,7 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using OpenUtau.App.Controls;
+using OpenUtau.App.Assistant;
 using OpenUtau.App.ViewModels;
 using OpenUtau.Classic;
 using OpenUtau.Core;
@@ -24,6 +25,7 @@ using OpenUtau.Core.DiffSinger;
 using OpenUtau.Core.Format;
 using OpenUtau.Core.Ustx;
 using OpenUtau.Core.Util;
+using OpenUtau.Automation;
 using ReactiveUI;
 using ReactiveUI.Primitives;
 using Serilog;
@@ -44,6 +46,7 @@ namespace OpenUtau.App.Views {
 
         private PianoRollDetachedWindow? pianoRollWindow;
         private PianoRoll? pianoRoll;
+        private Task? pianoRollInitialization;
         private WindowNotificationManager notificationManager;
 
         private PartEditState? partEditState;
@@ -56,6 +59,11 @@ namespace OpenUtau.App.Views {
         private readonly DispatcherTimer timer;
         private readonly DispatcherTimer autosaveTimer;
         private bool forceClose;
+        private AutomationLifecycleService? automation;
+        private Task? automationStartup;
+        private bool assistantShutdownStarted;
+        private bool assistantShutdownComplete;
+        private readonly List<IDisposable> assistantSubscriptions = new List<IDisposable>();
 
         private bool shouldOpenPartsContextMenu;
 
@@ -74,6 +82,12 @@ namespace OpenUtau.App.Views {
                 AskIfSaveAndContinue = AskIfSaveAndContinue
             };
             InitializeComponent();
+            viewModel.Assistant.Hide = () => { viewModel.AssistantVisible = false; UpdateAssistantLayout(); viewModel.Assistant.Preferences.Save(); };
+            SizeChanged += (_, _) => UpdateAssistantLayout();
+            if (Application.Current != null) { Application.Current.ResourcesChanged += OnAssistantResourcesChanged; }
+            AssistantSplitter.AddHandler(Thumb.DragCompletedEvent, (_, _) => PersistAssistantWidth());
+            AssistantSplitter.KeyUp += (_, _) => PersistAssistantWidth();
+            UpdateAssistantLayout();
             Log.Information("Initialized main window component.");
 
             // Edit commands validate once per frame instead of once per pointer move.
@@ -144,6 +158,104 @@ namespace OpenUtau.App.Views {
 
         public void InitProject() {
             viewModel.InitProject(this);
+            if (automation != null) { return; }
+            automation = new AutomationLifecycleService();
+            var session = new AssistantSessionService(new AssistantEditorBridge(automation, () => viewModel.Assistant.Preferences.ContextScope));
+            viewModel.Assistant.Initialize(session, automation.Context.GetSnapshot, id => automation.ApproveProposalAsync(id), automation.RejectProposal);
+            viewModel.Assistant.McpConfiguration = () => Task.FromResult(AssistantRuntimePaths.McpConfiguration(viewModel.Assistant.Preferences));
+            viewModel.Assistant.AllowDirectory = automation.AllowDirectory;
+            viewModel.Assistant.InitializeExternalSettings(automation.Enabled, automation.ExternalMode, enabled => automation.SetEnabledAsync(enabled), automation.SetExternalMode, () => automation.AllowedDirectories);
+            viewModel.Assistant.ShowInEditor = async result => {
+                await EnsurePianoRollAsync();
+                viewModel.Page = 1;
+                if (pianoRollWindow != null) { pianoRollWindow.Show(); } else { viewModel.ShowPianoRoll = true; }
+                if (AssistantSessionService.String(result, "partId") is { } id) { await automation.ShowPartAsync(id); }
+                else if (result.TryGetProperty("operations", out var operations) && operations.ValueKind == System.Text.Json.JsonValueKind.Array) {
+                    foreach (var operation in operations.EnumerateArray()) {
+                        if (AssistantSessionService.String(operation, "partId") is { } partId) { await automation.ShowPartAsync(partId); break; }
+                    }
+                }
+            };
+            viewModel.Assistant.PlayPreview = async result => {
+                if (AssistantSessionService.String(result, "artifactId") is { } artifactId) {
+                    await automation.InvokeAsync("play_artifact", System.Text.Json.JsonSerializer.SerializeToElement(new { artifactId }));
+                }
+            };
+            viewModel.Assistant.StopPreview = () => PlaybackManager.Inst.StopPlayback();
+            automation.ProposalCreated += proposal => Dispatcher.UIThread.Post(() => viewModel.Assistant.AddProposal(proposal.ProposalId, proposal.Label, proposal.Preview));
+            automation.ProjectChanged += sessionId => Dispatcher.UIThread.Post(() => { _ = viewModel.Assistant.ProjectChangedAsync(); });
+            viewModel.Assistant.GetJob = async id => System.Text.Json.JsonSerializer.SerializeToElement(await automation.InvokeAsync("get_job", System.Text.Json.JsonSerializer.SerializeToElement(new { jobId = id })), AssistantRuntimePaths.Json);
+            viewModel.Assistant.Revert = async result => System.Text.Json.JsonSerializer.SerializeToElement(await automation.InvokeAsync("revert_operation", System.Text.Json.JsonSerializer.SerializeToElement(new {
+                projectSessionId = automation.Editor.ProjectSessionId, expectedEditRevision = automation.Editor.EditRevision,
+                operationId = Guid.NewGuid().ToString("N"), targetOperationId = AssistantSessionService.String(result, "operationId")
+            })), AssistantRuntimePaths.Json);
+            assistantSubscriptions.Add(ReactiveUI.Primitives.SubscribeExtensions.Subscribe(MessageBus.Current.Listen<NotesSelectionEvent>(), _ => viewModel.Assistant.RefreshContext()));
+            assistantSubscriptions.Add(ReactiveUI.Primitives.SubscribeExtensions.Subscribe(MessageBus.Current.Listen<PartsSelectionEvent>(), _ => viewModel.Assistant.RefreshContext()));
+            assistantSubscriptions.Add(ReactiveUI.Primitives.SubscribeExtensions.Subscribe(MessageBus.Current.Listen<TrackSelectionEvent>(), _ => viewModel.Assistant.RefreshContext()));
+            assistantSubscriptions.Add(ReactiveUI.Primitives.SubscribeExtensions.Subscribe(MessageBus.Current.Listen<PianoRollOpenPartChangedEvent>(), _ => viewModel.Assistant.RefreshContext()));
+            assistantSubscriptions.Add(ReactiveUI.Primitives.SubscribeExtensions.Subscribe(MessageBus.Current.Listen<ThemeChangedEvent>(), _ => { viewModel.Assistant.RefreshLabels(); viewModel.Assistant.RefreshContext(); }));
+            automationStartup = StartAutomationAsync();
+        }
+
+        async Task StartAutomationAsync() {
+            try { if (automation != null) { await automation.StartAsync(); } }
+            catch (Exception ex) { viewModel.Assistant.ReportError(ex); }
+        }
+
+        bool assistantResourceRefreshQueued;
+        void OnAssistantResourcesChanged(object? sender, ResourcesChangedEventArgs args) {
+            if (assistantResourceRefreshQueued || assistantShutdownStarted) { return; }
+            assistantResourceRefreshQueued = true;
+            Dispatcher.UIThread.Post(() => {
+                assistantResourceRefreshQueued = false;
+                if (!assistantShutdownStarted) { viewModel.Assistant.RefreshLabels(); viewModel.Assistant.RefreshContext(); }
+            }, DispatcherPriority.Background);
+        }
+
+        void OnMenuAssistant(object? sender, RoutedEventArgs args) {
+            viewModel.AssistantVisible = !viewModel.AssistantVisible;
+            UpdateAssistantLayout();
+            viewModel.Assistant.Preferences.Save();
+            if (viewModel.AssistantEffectiveVisible) { AssistantPanel.Composer.Focus(); }
+        }
+
+        public void UpdateAssistantLayout() {
+            if (MainGrid == null) { return; }
+            var available = Math.Max(0, Bounds.Width > 0 ? Bounds.Width : Width);
+            var visible = viewModel.AssistantVisible && available >= 805;
+            viewModel.AssistantEffectiveVisible = visible;
+            var sidebar = MainGrid.ColumnDefinitions[2];
+            MainGrid.ColumnDefinitions[1].Width = new GridLength(visible ? 5 : 0);
+            sidebar.MinWidth = visible ? 300 : 0;
+            sidebar.MaxWidth = visible ? Math.Min(520, available - 505) : double.PositiveInfinity;
+            sidebar.Width = new GridLength(visible ? Math.Clamp(viewModel.Assistant.Preferences.Width, 300, sidebar.MaxWidth) : 0);
+        }
+
+        void PersistAssistantWidth() {
+            if (!viewModel.AssistantEffectiveVisible) { return; }
+            viewModel.Assistant.Preferences.Width = Math.Clamp(AssistantPanel.Bounds.Width, 300, 520);
+            viewModel.Assistant.Preferences.Save();
+        }
+
+        async Task ShutdownAssistantAndCloseAsync() {
+            if (assistantShutdownStarted) { return; }
+            assistantShutdownStarted = true;
+            try {
+                if (automationStartup != null) { await automationStartup; }
+                try { await viewModel.Assistant.DisposeAsync(); }
+                finally { if (automation != null) { await automation.DisposeAsync(); } }
+            } catch (Exception ex) { Log.Warning("Assistant cleanup failed: {ExceptionType}", ex.GetType().Name); }
+            finally {
+                foreach (var subscription in assistantSubscriptions) { subscription.Dispose(); }
+                assistantSubscriptions.Clear();
+                pianoRollWindow?.ForceClose();
+                if (Application.Current != null) { Application.Current.ResourcesChanged -= OnAssistantResourcesChanged; }
+                timer.Stop(); autosaveTimer.Stop();
+                DocManager.Inst.RemoveSubscriber(this);
+                assistantShutdownComplete = true;
+                forceClose = true;
+                Close();
+            }
         }
 
         void OnEditTimeSignature(object sender, PointerPressedEventArgs args) {
@@ -917,6 +1029,7 @@ namespace OpenUtau.App.Views {
         }
 
         void OnKeyDown(object sender, KeyEventArgs args) {
+            if (AssistantPanel.OwnsFocus || AssistantSplitter.IsKeyboardFocusWithin) { return; }
             if (PianoRollContainer.IsKeyboardFocusWithin) {
                 args.Handled = false;
                 return;
@@ -1047,7 +1160,7 @@ namespace OpenUtau.App.Views {
         }
 
         void OnPointerPressed(object? sender, PointerPressedEventArgs args) {
-            if (!PianoRollContainer.IsPointerOver && !args.Handled && args.ClickCount == 1) {
+            if (!AssistantPanel.IsPointerOver && !AssistantSplitter.IsPointerOver && !PianoRollContainer.IsPointerOver && !args.Handled && args.ClickCount == 1) {
                 this.Focus();
             }
         }
@@ -1426,41 +1539,36 @@ namespace OpenUtau.App.Views {
                 .Select(v => v.FindAncestorOfType<PartControl>(includeSelf: true))
                 .FirstOrDefault(pc => pc != null);    
             if (hitPartControl?.part is UVoicePart) {
-                if (pianoRoll == null) {
-                    LoadingWindow.BeginLoading(this);
-
-                    var model = await Task.Run<PianoRollViewModel>(() => new PianoRollViewModel());
-
-                    // Let's attach when needed to avoid startup slowdowns
-                    pianoRoll = new PianoRoll(model) {
-                        MainWindow = this
-                    };
-
-                    if (Preferences.Default.DetachPianoRoll) {
-                        viewModel.ShowPianoRoll = false;
-                        pianoRollWindow = new(pianoRoll);
-                    } else {
-                        PianoRollContainer.Content = pianoRoll;
-                    }
-
-                    await Task.Run(() =>
-                        pianoRoll.InitializePianoRollWindowAsync()
-                    );
-                    LoadingWindow.EndLoading();
-
-                    pianoRoll.ViewModel.PlaybackViewModel = viewModel.PlaybackViewModel;
-                }
+                await EnsurePianoRollAsync();
+                var roll = pianoRoll ?? throw new InvalidOperationException("Piano roll initialization failed.");
                 if (pianoRollWindow != null) {
                     pianoRollWindow.Show();
                     pianoRollWindow.Activate();
                 } else {
                     viewModel.ShowPianoRoll = true;
-                    pianoRoll.Focus();
+                    roll.Focus();
                 }
                 int tick = viewModel.TracksViewModel.PointToTick(args.GetPosition(canvas));
                 DocManager.Inst.ExecuteCmd(new LoadPartNotification(hitPartControl.part, DocManager.Inst.Project, tick));
-                pianoRoll.AttachExpressions();
+                roll.AttachExpressions();
             }
+        }
+
+        /// <summary>Shared lazy initialization for pointer navigation and native assistant review navigation.</summary>
+        public Task EnsurePianoRollAsync() => pianoRollInitialization ??= InitializePianoRollAsync();
+
+        async Task InitializePianoRollAsync() {
+            LoadingWindow.BeginLoading(this);
+            try {
+                var model = new PianoRollViewModel { PlaybackViewModel = viewModel.PlaybackViewModel };
+                pianoRoll = new PianoRoll(model) { MainWindow = this };
+                if (Preferences.Default.DetachPianoRoll) {
+                    viewModel.ShowPianoRoll = false;
+                    pianoRollWindow = new(pianoRoll);
+                } else { PianoRollContainer.Content = pianoRoll; }
+                await Task.Run(() => pianoRoll.InitializePianoRollWindowAsync());
+                pianoRoll.ViewModel.PlaybackViewModel = viewModel.PlaybackViewModel;
+            } finally { LoadingWindow.EndLoading(); }
         }
 
         public void SetPianoRollAttachment() {
@@ -2090,6 +2198,11 @@ namespace OpenUtau.App.Views {
 
         public void WindowClosing(object? sender, WindowClosingEventArgs e) {
             if (forceClose || DocManager.Inst.ChangesSaved) {
+                if (!assistantShutdownComplete) {
+                    e.Cancel = true;
+                    _ = ShutdownAssistantAndCloseAsync();
+                    return;
+                }
                 if (Preferences.Default.ClearCacheOnQuit) {
                     Log.Information("Clearing cache...");
                     PathManager.Inst.ClearCache();

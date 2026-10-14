@@ -8,3 +8,8 @@
 *.csproj   text eol=crlf
 *.xaml     text eol=crlf
 *.axaml    text eol=crlf
+
+# Generated AI contracts are checked byte-for-byte on every platform.
+contracts/automation/** text eol=lf
+tools/openutau-ai/** text eol=lf
+docs/ai/** text eol=lf

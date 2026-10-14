@@ -1,0 +1,54 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Style Selector="Button, ToggleButton">
+    <Setter Property="Focusable" Value="True"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Padding" Value="8,4"/>
+    <Setter Property="Height" Value="NaN"/>
+    <Setter Property="Margin" Value="0"/>
+  </Style>
+  <Style Selector="Button:focus-visible">
+    <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush1}"/>
+    <Setter Property="BorderThickness" Value="2"/>
+  </Style>
+  <Style Selector="ComboBox">
+    <Setter Property="HorizontalAlignment" Value="Stretch"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Height" Value="NaN"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="6,3"/>
+  </Style>
+  <Style Selector="TextBlock.secondary">
+    <Setter Property="Foreground" Value="{DynamicResource ForegroundBrushSecondary}"/>
+    <Setter Property="FontSize" Value="11"/>
+    <Setter Property="TextWrapping" Value="Wrap"/>
+  </Style>
+  <Style Selector="Border.card">
+    <Setter Property="Padding" Value="12"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource MenuFlyoutPresenterBorderBrush}"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+  </Style>
+  <Style Selector="ListBoxItem">
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Margin" Value="0,0,0,8"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Focusable" Value="False"/>
+    <Setter Property="Height" Value="NaN"/>
+    <Setter Property="MinHeight" Value="0"/>
+  </Style>
+  <Style Selector="TextBox">
+    <Setter Property="Height" Value="NaN"/>
+    <Setter Property="MinHeight" Value="28"/>
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="8,6"/>
+  </Style>
+  <Style Selector="CheckBox /template/ Grid">
+    <Setter Property="Width" Value="NaN"/>
+    <Setter Property="Height" Value="NaN"/>
+  </Style>
+  <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="Transparent"/>
+  </Style>
+</Styles>

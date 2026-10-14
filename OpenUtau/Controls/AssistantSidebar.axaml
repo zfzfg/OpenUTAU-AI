@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:OpenUtau.App.ViewModels"
+             xmlns:c="using:OpenUtau.App.Controls"
+             x:Class="OpenUtau.App.Controls.AssistantSidebar"
+             x:DataType="vm:AssistantSidebarViewModel" Classes="assistant">
+  <UserControl.Styles>
+    <StyleInclude Source="/Styles/AssistantStyles.axaml"/>
+  </UserControl.Styles>
+  <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}" BorderThickness="1,0,0,0" BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto" Margin="12" RowSpacing="8">
+      <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="4">
+        <StackPanel Spacing="2">
+          <TextBlock Text="{DynamicResource assistant.title}" FontWeight="SemiBold" FontSize="16"/>
+          <TextBlock Text="{Binding Status}" Classes="secondary" MaxHeight="48"/>
+        </StackPanel>
+        <Button Grid.Column="1" Command="{Binding SettingsCommand}" AutomationProperties.Name="{DynamicResource assistant.settings}" ToolTip.Tip="{DynamicResource assistant.settings}" VerticalAlignment="Top">
+          <TextBlock Text="⚙" FontSize="16"/>
+        </Button>
+        <Button Grid.Column="2" Click="OnHide" Content="›" FontSize="20" AutomationProperties.Name="{DynamicResource assistant.hide}" ToolTip.Tip="{DynamicResource assistant.hide}" VerticalAlignment="Top"/>
+      </Grid>
+      <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,*" RowSpacing="4" ColumnSpacing="8" IsEnabled="{Binding CanConfigure}">
+        <ComboBox Grid.ColumnSpan="2" ItemsSource="{Binding Providers}" SelectedItem="{Binding Provider}" AutomationProperties.Name="{DynamicResource assistant.provider}"/>
+        <ComboBox Grid.Row="1" ItemsSource="{Binding Models}" SelectedItem="{Binding Model}" PlaceholderText="{DynamicResource assistant.model}" AutomationProperties.Name="{DynamicResource assistant.model}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Efforts}" SelectedItem="{Binding Effort}" PlaceholderText="{DynamicResource assistant.effort}" AutomationProperties.Name="{DynamicResource assistant.effort}"/>
+        <ComboBox Grid.Row="2" ItemsSource="{Binding Modes}" SelectedItem="{Binding Mode}" AutomationProperties.Name="{DynamicResource assistant.mode}"/>
+        <Button Grid.Row="2" Grid.Column="1" Command="{Binding ConnectCommand}" Content="{DynamicResource assistant.connect}" IsVisible="{Binding !IsConnected}" HorizontalAlignment="Stretch"/>
+        <Button Grid.Row="2" Grid.Column="1" Command="{Binding DisconnectCommand}" Content="{DynamicResource assistant.disconnect}" IsVisible="{Binding IsConnected}" HorizontalAlignment="Stretch"/>
+      </Grid>
+      <Border Grid.Row="2" Background="{DynamicResource NeutralAccentBrushSemi2}" CornerRadius="4" Padding="8,6">
+        <StackPanel Spacing="4">
+          <TextBlock Text="{Binding ContextSummary}" Classes="secondary" AutomationProperties.Name="{DynamicResource assistant.context}"/>
+          <ComboBox ItemsSource="{Binding ContextScopes}" SelectedItem="{Binding ContextScope}" AutomationProperties.Name="{DynamicResource assistant.context.scope}" IsEnabled="{Binding CanConfigure}"/>
+        </StackPanel>
+      </Border>
+      <ScrollViewer Grid.Row="3" IsVisible="{Binding SettingsOpen}" MaxHeight="300" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="6">
+          <TextBlock Text="{DynamicResource assistant.settings.description}" Classes="secondary"/>
+          <CheckBox Content="{DynamicResource assistant.settings.automation}" IsChecked="{Binding AutomationEnabled}"/>
+          <TextBlock Text="{DynamicResource assistant.settings.externalmode}" Classes="secondary"/>
+          <ComboBox ItemsSource="{Binding Modes}" SelectedItem="{Binding ExternalMode}" AutomationProperties.Name="{DynamicResource assistant.settings.externalmode}"/>
+          <TextBlock Text="{DynamicResource assistant.settings.node}" Classes="secondary"/>
+          <TextBox Text="{Binding NodePath}" AutomationProperties.Name="{DynamicResource assistant.settings.node}"/>
+          <TextBlock Text="{DynamicResource assistant.settings.host}" Classes="secondary"/>
+          <TextBox Text="{Binding HostPath}" AutomationProperties.Name="{DynamicResource assistant.settings.host}"/>
+          <TextBlock Text="{DynamicResource assistant.settings.cli}" Classes="secondary"/>
+          <TextBox Text="{Binding CliPath}" AutomationProperties.Name="{DynamicResource assistant.settings.cli}"/>
+          <TextBlock Text="{DynamicResource assistant.settings.adapter}" Classes="secondary"/>
+          <TextBox Text="{Binding AdapterPath}" AutomationProperties.Name="{DynamicResource assistant.settings.adapter}"/>
+          <TextBlock Text="{DynamicResource assistant.settings.history}" Classes="secondary"/>
+          <NumericUpDown Value="{Binding HistoryLimit}" Minimum="100" Maximum="5000" Increment="100" AutomationProperties.Name="{DynamicResource assistant.settings.history}"/>
+          <TextBlock Text="{DynamicResource assistant.settings.folders}" Classes="secondary"/>
+          <TextBlock Text="{Binding AllowedDirectoriesText}" Classes="secondary"/>
+          <WrapPanel>
+            <Button Command="{Binding ProbeCommand}" Content="{DynamicResource assistant.probe}" Margin="0,0,4,4"/>
+            <Button Click="OnCopyConfiguration" Content="{DynamicResource assistant.copyconfig}" Margin="0,0,4,4"/>
+            <Button Command="{Binding ResumeCommand}" Content="{DynamicResource assistant.resume}" Margin="0,0,4,4"/>
+            <Button Command="{Binding ClearCommand}" Content="{DynamicResource assistant.clear}" Margin="0,0,4,4"/>
+            <Button Click="OnAllowDirectory" Content="{DynamicResource assistant.allowfolder}" Margin="0,0,4,4"/>
+          </WrapPanel>
+          <TextBlock Text="{DynamicResource assistant.settings.permissions}" Classes="secondary"/>
+        </StackPanel>
+      </ScrollViewer>
+      <Grid Grid.Row="4">
+        <ListBox Name="Conversation" ItemsSource="{Binding Messages}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto">
+          <ListBox.ItemsPanel><ItemsPanelTemplate><VirtualizingStackPanel/></ItemsPanelTemplate></ListBox.ItemsPanel>
+          <ListBox.ItemTemplate><DataTemplate x:DataType="vm:AssistantMessageViewModel"><c:AssistantMessageCard/></DataTemplate></ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel IsVisible="{Binding IsEmpty}" Spacing="8" VerticalAlignment="Center" Margin="4">
+          <TextBlock Text="{DynamicResource assistant.empty.title}" FontWeight="SemiBold" FontSize="15" TextWrapping="Wrap"/>
+          <TextBlock Text="{DynamicResource assistant.empty.description}" Classes="secondary"/>
+          <Button Command="{Binding StartCommand}" CommandParameter="assistant.start.lyrics" Content="{DynamicResource assistant.start.lyrics}" HorizontalAlignment="Stretch"/>
+          <Button Command="{Binding StartCommand}" CommandParameter="assistant.start.pronunciation" Content="{DynamicResource assistant.start.pronunciation}" HorizontalAlignment="Stretch"/>
+          <Button Command="{Binding StartCommand}" CommandParameter="assistant.start.song" Content="{DynamicResource assistant.start.song}" HorizontalAlignment="Stretch"/>
+        </StackPanel>
+      </Grid>
+      <StackPanel Grid.Row="5" Spacing="8">
+        <TextBox Name="Composer" Text="{Binding Draft}" AcceptsReturn="True" TextWrapping="Wrap" MinHeight="80" MaxHeight="160" VerticalContentAlignment="Top" PlaceholderText="{DynamicResource assistant.composer}" AutomationProperties.Name="{DynamicResource assistant.composer}"/>
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+          <CheckBox Content="{DynamicResource assistant.context.include}" IsChecked="{Binding IncludeContext}" FontSize="11" VerticalAlignment="Center"/>
+          <Button Grid.Column="1" Command="{Binding SendCommand}" Content="{DynamicResource assistant.send}" IsVisible="{Binding !IsBusy}"/>
+          <Button Grid.Column="1" Command="{Binding StopCommand}" Content="{DynamicResource assistant.stop}" IsVisible="{Binding IsBusy}"/>
+        </Grid>
+        <TextBlock Text="{DynamicResource assistant.composer.hint}" Classes="secondary"/>
+      </StackPanel>
+    </Grid>
+  </Border>
+</UserControl>

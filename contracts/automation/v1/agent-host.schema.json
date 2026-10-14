@@ -1,0 +1,2240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openutau.org/automation/v1/agent-host.schema.json",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "initialize"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "apiVersion": {
+              "const": "1"
+            },
+            "appVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "apiVersion"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "providers.list"
+        },
+        "params": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "providers.probe"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "providerId": {
+              "type": "string",
+              "enum": [
+                "codex",
+                "claude",
+                "grok",
+                "gemini",
+                "muse"
+              ]
+            },
+            "cliPath": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "adapterPath": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "required": [
+            "providerId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.create"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "providerId": {
+              "type": "string",
+              "enum": [
+                "codex",
+                "claude",
+                "grok",
+                "gemini",
+                "muse"
+              ]
+            },
+            "cwd": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "cliPath": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "adapterPath": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "instanceId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "projectSessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "accessGrantRef": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "clientId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "modelId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "effortId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "read_only",
+                "preview",
+                "apply"
+              ]
+            },
+            "mcpServers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "command": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "args": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 1000
+                  },
+                  "env": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 256
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 1000
+                  }
+                },
+                "required": [
+                  "name",
+                  "command",
+                  "args",
+                  "env"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 32
+            }
+          },
+          "required": [
+            "providerId",
+            "cwd",
+            "instanceId",
+            "projectSessionId",
+            "accessGrantRef"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.load"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "providerId": {
+              "type": "string",
+              "enum": [
+                "codex",
+                "claude",
+                "grok",
+                "gemini",
+                "muse"
+              ]
+            },
+            "cwd": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "cliPath": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "adapterPath": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "instanceId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "projectSessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "accessGrantRef": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "clientId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "modelId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "effortId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "read_only",
+                "preview",
+                "apply"
+              ]
+            },
+            "mcpServers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "command": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "args": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 1000
+                  },
+                  "env": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 256
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 1000
+                  }
+                },
+                "required": [
+                  "name",
+                  "command",
+                  "args",
+                  "env"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 32
+            },
+            "nativeSessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "providerId",
+            "cwd",
+            "instanceId",
+            "projectSessionId",
+            "accessGrantRef",
+            "nativeSessionId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.list"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "cursor": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.prompt"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "context": {
+              "type": "object",
+              "properties": {},
+              "required": [],
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "sessionId",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.cancel"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "sessionId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.setModel"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "modelId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "effortId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "sessionId",
+            "modelId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.setEffort"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "effortId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "sessionId",
+            "effortId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.setMode"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "mode": {
+              "type": "string",
+              "enum": [
+                "read_only",
+                "preview",
+                "apply"
+              ]
+            },
+            "accessGrantRef": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "required": [
+            "sessionId",
+            "mode"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.steer"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "required": [
+            "sessionId",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "permission.respond"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "requestId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "optionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "sessionId",
+            "turnId",
+            "processGeneration",
+            "requestId",
+            "optionId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "question.respond"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "requestId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "optionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "answer": {
+              "type": "string",
+              "maxLength": 16384
+            }
+          },
+          "required": [
+            "sessionId",
+            "turnId",
+            "processGeneration",
+            "requestId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "session.dispose"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "sessionId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "method": {
+          "const": "shutdown"
+        },
+        "params": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "providerState"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 2147483647
+            },
+            "providerId": {
+              "type": "string",
+              "enum": [
+                "codex",
+                "claude",
+                "grok",
+                "gemini",
+                "muse"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "cliVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "adapterVersion": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "capabilities": {
+              "type": "object",
+              "properties": {},
+              "required": [],
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "providerId",
+            "status"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "sessionState"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "state": {
+              "type": "string",
+              "enum": [
+                "disconnected",
+                "starting",
+                "ready",
+                "working",
+                "waiting_user",
+                "cancelling",
+                "failed"
+              ]
+            },
+            "nativeModeId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "state"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "messageDelta"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "text": {
+              "type": "string"
+            },
+            "messageId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "messageCompleted"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "permissionRequested"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "requestId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "question": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "optionId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "kind": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "required": [
+                  "optionId",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 16
+            },
+            "toolCall": {
+              "type": "object",
+              "properties": {},
+              "required": [],
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "sessionId",
+            "turnId",
+            "processGeneration",
+            "eventId",
+            "requestId",
+            "options"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "questionRequested"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "requestId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "question": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "optionId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "kind": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "required": [
+                  "optionId",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 16
+            },
+            "toolCall": {
+              "type": "object",
+              "properties": {},
+              "required": [],
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "sessionId",
+            "turnId",
+            "processGeneration",
+            "eventId",
+            "requestId",
+            "question"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "requestWithdrawn"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "requestId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "requestId",
+            "reason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "turnCompleted"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "stopReason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "required": [
+            "sessionId",
+            "turnId",
+            "processGeneration",
+            "eventId",
+            "stopReason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "processExited"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "code": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "signal": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "code"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "error"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "code": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "recoverable": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "code",
+            "message",
+            "recoverable"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "models"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "modelId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "efforts": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 256
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 32
+                  }
+                },
+                "required": [
+                  "modelId",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 1024
+            },
+            "currentModelId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "currentEffortId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "efforts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4096
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              "maxItems": 32
+            }
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "models",
+            "efforts"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "capabilities"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "capabilities": {
+              "type": "object",
+              "properties": {},
+              "required": [],
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "capabilities"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "planUpdated"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "entries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "maxItems": 1000
+            }
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "entries"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "usageUpdated"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "usage": {
+              "type": "object",
+              "properties": {},
+              "required": [],
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "usage"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "toolStarted"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "toolCallId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "status": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "content": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "maxItems": 1000
+            },
+            "result": {}
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "toolCallId",
+            "title",
+            "status"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "toolUpdated"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "toolCallId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "status": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "content": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "maxItems": 1000
+            },
+            "result": {}
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "toolCallId",
+            "title",
+            "status"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "method": {
+          "const": "toolCompleted"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "turnId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "processGeneration": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "eventId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "toolCallId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "status": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "content": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {},
+                "required": [],
+                "additionalProperties": true
+              },
+              "maxItems": 1000
+            },
+            "result": {}
+          },
+          "required": [
+            "sessionId",
+            "processGeneration",
+            "eventId",
+            "toolCallId",
+            "title",
+            "status"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "method",
+        "params"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "result": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "result"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "const": "2.0"
+        },
+        "id": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer"
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            },
+            "data": {
+              "type": "object",
+              "properties": {},
+              "required": [],
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "code",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "jsonrpc",
+        "id",
+        "error"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

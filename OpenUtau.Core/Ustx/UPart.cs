@@ -51,6 +51,7 @@ namespace OpenUtau.Core.Ustx {
 
         [YamlIgnore] public List<UPhoneme> phonemes = new List<UPhoneme>();
         [YamlIgnore] public int phonemesRevision = 0;
+        [YamlIgnore] public long PhonemizationRequestedGeneration { get; private set; }
         [YamlIgnore] public List<RenderPhrase> renderPhrases = new List<RenderPhrase>();
 
         [YamlIgnore] private PhonemizerResponse phonemizerResponse;
@@ -180,7 +181,7 @@ namespace OpenUtau.Core.Ustx {
                 var request = new PhonemizerRequest() {
                     singer = track.Singer,
                     part = this,
-                    timestamp = DateTime.Now.ToFileTimeUtc(),
+                    timestamp = Math.Max(DateTime.Now.ToFileTimeUtc(), notesTimestamp + 1),
                     noteIndexes = noteIndexes.ToArray(),
                     notes = groups.ToArray(),
                     
@@ -191,6 +192,7 @@ namespace OpenUtau.Core.Ustx {
                     timeAxis = project.timeAxis.Clone(),
                 };
                 notesTimestamp = request.timestamp;
+                PhonemizationRequestedGeneration++;
                 DocManager.Inst.PhonemizerRunner?.Push(request);
             }
             lock (this) {
@@ -241,6 +243,7 @@ namespace OpenUtau.Core.Ustx {
                             note.phonemeIndexes = indexes.ToArray();
                         }
                         phonemesTimestamp = resp.timestamp;
+                        phonemesRevision++;
                     }
                     phonemizerResponse = null;
                 }

@@ -1,8 +1,9 @@
 on:
+  push:
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, main ]
   workflow_dispatch:
-    branches: [ master ]
 
 jobs:
   pr-test:
@@ -21,6 +22,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24.19.0'
+        cache: npm
+        cache-dependency-path: tools/openutau-ai/package-lock.json
+
+    - name: Build and test AI contracts, MCP and fake ACP providers
+      working-directory: tools/openutau-ai
+      run: |
+        npm ci
+        npm run check:contracts
+        npm run typecheck
+        npm test
+
+    - name: Package pinned AI runtime
+      working-directory: tools/openutau-ai
+      run: npm run package -- --rid ${{ matrix.os.arch }} --out ../../OpenUtau/AI
 
     - uses: actions/setup-dotnet@v4
       with:

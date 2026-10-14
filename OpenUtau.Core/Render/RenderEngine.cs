@@ -118,8 +118,8 @@ namespace OpenUtau.Core.Render {
         /// clobber the live playback session.
         /// </summary>
         public Tuple<WaveMix, List<Fader>> RenderMixdown(
-                TaskScheduler uiScheduler, ref CancellationTokenSource cancellation, bool wait, bool applyMixFx, MixPlanner planner) {
-            var newCancellation = new CancellationTokenSource();
+                TaskScheduler uiScheduler, ref CancellationTokenSource cancellation, bool wait, bool applyMixFx, MixPlanner planner, CancellationToken cancellationToken = default) {
+            var newCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             var oldCancellation = Interlocked.Exchange(ref cancellation, newCancellation);
             if (oldCancellation != null) {
                 oldCancellation.Cancel();
@@ -225,8 +225,8 @@ namespace OpenUtau.Core.Render {
         }
 
         // for export
-        public List<SlotMixSource> RenderTracks(TaskScheduler uiScheduler, ref CancellationTokenSource cancellation, MixPlanner planner) {
-            var newCancellation = new CancellationTokenSource();
+        public List<SlotMixSource> RenderTracks(TaskScheduler uiScheduler, ref CancellationTokenSource cancellation, MixPlanner planner, CancellationToken cancellationToken = default) {
+            var newCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             var oldCancellation = Interlocked.Exchange(ref cancellation, newCancellation);
             if (oldCancellation != null) {
                 oldCancellation.Cancel();
