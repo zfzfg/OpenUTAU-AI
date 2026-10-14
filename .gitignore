@@ -341,3 +341,7 @@ appcast.*.xml
 .vscode/
 Microsoft.AI.DirectML
 tmp/
+.cocoindex_code/cocoindex.db/mdb/lock.mdb
+.cocoindex_code/settings.yml
+.cocoindex_code/target_sqlite.db
+.cocoindex_code/cocoindex.db/mdb/data.mdb
